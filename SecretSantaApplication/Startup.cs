@@ -27,7 +27,7 @@ namespace SecretSantaApplication
             services.AddAuthentication("AuthCookie").AddCookie("AuthCookie", config =>
             {
                 config.Cookie.Name = "Auth.Cookie";
-                config.LoginPath = "/SignIn/";
+                config.LoginPath = "/User/SignIn/";
             });
         }
 

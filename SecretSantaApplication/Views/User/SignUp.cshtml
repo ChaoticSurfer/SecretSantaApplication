@@ -4,9 +4,9 @@
     Layout = "_auth";
 }
 
-<div>
+<div class="auth-div">
     <h1>Sign Up Form</h1>
-    <form asp-controller="SignUp" asp-action="Index" method="post">
+    <form asp-controller="User" asp-action="SignUp" method="post">
         <div>
             <input type="email" class="form-control" asp-for="EmailAddress" name="EmailAddress" placeholder="Email Address" required="required"/>
         </div>

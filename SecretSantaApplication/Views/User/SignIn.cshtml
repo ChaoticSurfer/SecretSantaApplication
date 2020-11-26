@@ -6,7 +6,7 @@
 
 <div>
     <h1>Sign In Form</h1>
-    <form asp-controller="SignIn" asp-action="Index" method="post">
+    <form asp-controller="User" asp-action="SignIn" method="post">
         <div>
             <input type="email" class="form-control" asp-for="EmailAddress" name="EmailAddress" placeholder="Email Address" required="required"/>
             <span class="text-danger" asp-validation-for="EmailAddress"></span>
