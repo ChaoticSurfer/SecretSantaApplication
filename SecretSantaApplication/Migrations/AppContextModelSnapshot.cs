@@ -23,12 +23,7 @@ namespace SecretSantaApplication.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmailAddress");

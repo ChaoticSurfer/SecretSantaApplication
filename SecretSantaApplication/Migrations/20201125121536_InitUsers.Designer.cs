@@ -9,7 +9,7 @@ using SecretSantaApplication.Data;
 namespace SecretSantaApplication.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20201125105213_InitUsers")]
+    [Migration("20201125121536_InitUsers")]
     partial class InitUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,12 +25,7 @@ namespace SecretSantaApplication.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmailAddress");

@@ -11,8 +11,7 @@ namespace SecretSantaApplication.Migrations
                 columns: table => new
                 {
                     EmailAddress = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: false),
-                    ConfirmPassword = table.Column<string>(nullable: false)
+                    Password = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
