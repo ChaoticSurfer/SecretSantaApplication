@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "_Layout";
+}
+
+<div id="profile">
+    <form asp-action="Profile" method="post">
+        <div>
+            <p lass="form-control">Email Address : @ViewData["Email"]</p>
+        </div>
+        <div>
+            <label for="age">Age</label>
+            <input id="age" type="number" class="form-control" name="Age" placeholder="Age" value="@ViewData["Age"]" required="required">
+        </div>
+        <div>
+            <label for="wishes">Wishes</label>
+            <textarea id="wishes"type="text" class="form-control" name="Wishes" placeholder="Wishes" rows="5" cols="50" required="required">@ViewData["Wishes"]</textarea>
+        </div>
+        <div>
+            <button class="btn btn-success" class="form-control" type="submit">Save</button>
+        </div>
+    </form>
+</div>

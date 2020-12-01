@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,9 @@ namespace SecretSantaApplication
                 config.Cookie.Name = "Auth.Cookie";
                 config.LoginPath = "/User/SignIn/";
             });
+            services.AddSession(options => {   
+                options.IdleTimeout = TimeSpan.FromMinutes(30);   
+            }); 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,6 +49,7 @@ namespace SecretSantaApplication
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
             app.UseAuthentication();

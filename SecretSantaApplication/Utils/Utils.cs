@@ -8,6 +8,8 @@ namespace SecretSantaApplication.Utils
 {
     public static class Utils
     {
+        public const string EMAIL_ADDRESS = "email";
+
         public static void CreateUserIdentity(HttpContext httpContext, String emailAddress)
         {
             var userClaims = new List<Claim>()
