@@ -4,8 +4,9 @@
     Layout = "_auth";
 }
 
-<div>
-    <h1>Sign In Form</h1>
+<div id="sign-in">
+    <img src="~/images/santa.png" alt="" width="200" height="200">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <form asp-controller="User" asp-action="SignIn" method="post">
         <div>
             <input type="email" class="form-control" asp-for="EmailAddress" name="EmailAddress" placeholder="Email Address" required="required"/>
@@ -14,8 +15,11 @@
         <div>
             <input class="form-control" type="password" class="form-control" asp-for="Password" name="Password" placeholder="Password" required="required"/>
         </div>
-        <button class="btn btn-success" class="form-control" type="submit">Sign In</button>
-        <br>
         <span class="text-danger"> @ViewData["Message"]</span>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+    </form>
+    
+    <form asp-action="SignUp" method="get">
+        <button class="btn btn-success" type="submit">Sign Up</button>
     </form>
 </div>

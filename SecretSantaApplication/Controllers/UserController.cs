@@ -36,6 +36,7 @@ namespace SecretSantaApplication.Controllers
             var checkedUser = _appContext.Users.SingleOrDefault(u => u.EmailAddress == user.EmailAddress);
             if (checkedUser == null)
             {
+                Console.WriteLine(confirmPassword);
                 await _appContext.AddAsync(new User
                 {
                     EmailAddress = user.EmailAddress,
@@ -84,6 +85,7 @@ namespace SecretSantaApplication.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
+
             return View();
         }
 

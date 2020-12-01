@@ -1,8 +1,32 @@
 h1 {
     color: blue;
+    text-align: center;
 }
-.auth-div {
-    margin: auto;
-    width: 350px;
-    height: 400px;
+
+img {
+    margin-left: 55px;
+    margin-bottom: 20px;
 }
+
+#sign-in {
+    margin: 100px auto;
+    width: 300px;
+}
+
+#sign-up {
+    margin: 100px auto;
+    width: 300px;
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+button {
+    height: 45px;
+    width: 300px;
+    margin-top: 5px;
+}
+
+
+
