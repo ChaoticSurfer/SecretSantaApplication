@@ -23,7 +23,7 @@ namespace SecretSantaApplication
             services.AddControllersWithViews();
             services.AddDbContext<AppContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("SecretSantaConnection"));
+                options.UseSqlite(Configuration.GetConnectionString("SecretSantaConnection"));
             });
             services.AddAuthentication("AuthCookie").AddCookie("AuthCookie", config =>
             {

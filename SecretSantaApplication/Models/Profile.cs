@@ -5,7 +5,7 @@ namespace SecretSantaApplication.Models
     public class Profile
     {
         [Key] public string EmailAddress { get; set; }
-        [DataType(DataType.Password)] public int Age { get; set; }
-        public string Wishes { get; set; }
+        [DataType(DataType.Password)] public string BirthDate { get; set; }
+        public string LetterToSecretSanta { get; set; }
     }
 }

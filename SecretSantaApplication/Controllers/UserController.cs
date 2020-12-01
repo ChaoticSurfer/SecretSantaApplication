@@ -36,7 +36,6 @@ namespace SecretSantaApplication.Controllers
             var checkedUser = _appContext.Users.SingleOrDefault(u => u.EmailAddress == user.EmailAddress);
             if (checkedUser == null)
             {
-                Console.WriteLine(confirmPassword);
                 await _appContext.AddAsync(new User
                 {
                     EmailAddress = user.EmailAddress,
@@ -100,8 +99,8 @@ namespace SecretSantaApplication.Controllers
             if (profile != null)
             {
                 ViewData["Email"] = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS);
-                ViewData["Age"] = profile.Age;
-                ViewData["Wishes"] = profile.Wishes;
+                ViewData["birthDate"] = profile.BirthDate;
+                ViewData["letterToSecretSanta"] = profile.LetterToSecretSanta;
                 return View();
             }
 
@@ -111,7 +110,7 @@ namespace SecretSantaApplication.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Profile(int age, string wishes)
+        public IActionResult Profile(string birthDate, string letterToSecretSanta)
         {
             var profile = _appContext.Profiles.SingleOrDefault(u =>
                 u.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS));
@@ -119,8 +118,9 @@ namespace SecretSantaApplication.Controllers
             {
                 _appContext.Remove(profile);
             }
+
             _appContext.Profiles.Add(new Profile
-                {EmailAddress = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS), Age = age, Wishes = wishes});
+                {EmailAddress = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS), BirthDate = birthDate, LetterToSecretSanta = letterToSecretSanta});
             _appContext.SaveChanges();
             return RedirectToAction("Index", "Home");
         }

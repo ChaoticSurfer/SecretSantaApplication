@@ -9,12 +9,12 @@
             <p lass="form-control">Email Address : @ViewData["Email"]</p>
         </div>
         <div>
-            <label for="age">Age</label>
-            <input id="age" type="number" class="form-control" name="Age" placeholder="Age" value="@ViewData["Age"]" required="required">
+            <label for="birthDate">Birth Date</label>
+            <input id="birthDate" type="date" class="form-control" name="birthDate" placeholder="birthDate" value="@ViewData["birthDate"]" required="required">
         </div>
         <div>
-            <label for="wishes">Wishes</label>
-            <textarea id="wishes"type="text" class="form-control" name="Wishes" placeholder="Wishes" rows="5" cols="50" required="required">@ViewData["Wishes"]</textarea>
+            <label for="letterToSecretSanta">Letter to Secret Santa</label>
+            <textarea id="letterToSecretSanta" type="text" class="form-control" name="letterToSecretSanta" placeholder="Type letter to secret santa" rows="5" cols="50" required="required">@ViewData["letterToSecretSanta"]</textarea>
         </div>
         <div>
             <button class="btn btn-success" class="form-control" type="submit">Save</button>
