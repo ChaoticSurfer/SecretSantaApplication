@@ -1,0 +1,28 @@
+@model User
+@{
+    ViewData["Title"] = "Sign Up";
+    Layout = "_auth";
+}
+
+<div id="sign-up">
+    <form asp-controller="User" asp-action="SignUp" method="post">
+        <img src="~/images/santa.png" alt="" width="200" height="200">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
+        <div>
+            <input type="email" class="form-control" asp-for="EmailAddress" name="EmailAddress" placeholder="Email Address" required="required"/>
+        </div>
+        <div>
+            <input class="form-control" type="password" asp-for="Password" name="Password" placeholder="Password" required="required"/>
+            <span class="text-danger" asp-validation-for="Password"></span>
+        </div>
+        <div>
+            <input type="password" class="form-control" asp-for="ConfirmPassword" name="confirmPassword" placeholder="Confirm Password" required="required"/>
+            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+        </div>
+        <span class="text-danger"> @ViewData["Message"]</span>
+        <button class="btn btn-success" type="submit">Sign Up</button>
+    </form>
+    <form asp-action="SignIn" method="get">
+        <button class="btn btn-primary" type="submit">Sign in</button>
+    </form>
+</div>
