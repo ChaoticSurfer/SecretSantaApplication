@@ -25,29 +25,27 @@ namespace SecretSantaApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(User user, String confirmPassword)
+        public async Task<IActionResult> SignUp(User user)
         {
-            if (user.Password != confirmPassword)
+            if (ModelState.IsValid)
             {
-                ViewData["Error"] = "Passwords don't match.";
-                return View();
-            }
-
-            var checkedUser = _appContext.Users.SingleOrDefault(u => u.EmailAddress == user.EmailAddress);
-            if (checkedUser == null)
-            {
-                await _appContext.AddAsync(new User
+                var checkedUser = _appContext.Users.SingleOrDefault(u => u.EmailAddress == user.EmailAddress);
+                if (checkedUser == null)
                 {
-                    EmailAddress = user.EmailAddress,
-                    Password = user.Password,
-                });
+                    await _appContext.AddAsync(new User
+                    {
+                        EmailAddress = user.EmailAddress,
+                        Password = user.Password
+                    });
 
-                await _appContext.SaveChangesAsync();
-                Utils.Utils.CreateUserIdentity(HttpContext, user.EmailAddress);
-                return RedirectToAction("Profile", "User", new {email = user.EmailAddress});
+                    await _appContext.SaveChangesAsync();
+                    Utils.Utils.CreateUserIdentity(HttpContext, user.EmailAddress);
+                    return RedirectToAction("Profile", "User", new {email = user.EmailAddress});
+                }
+
+                ViewData["Message"] = "User with this email address already exists.";
             }
-
-            ViewData["Message"] = "User with this email address already exists.";
+       
             return View();
         }
 
@@ -120,7 +118,10 @@ namespace SecretSantaApplication.Controllers
             }
 
             _appContext.Profiles.Add(new Profile
-                {EmailAddress = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS), BirthDate = birthDate, LetterToSecretSanta = letterToSecretSanta});
+            {
+                EmailAddress = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS), BirthDate = birthDate,
+                LetterToSecretSanta = letterToSecretSanta
+            });
             _appContext.SaveChanges();
             return RedirectToAction("Index", "Home");
         }

@@ -37,7 +37,8 @@ namespace SecretSantaApplication.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(18);
 
                     b.HasKey("EmailAddress");
 

@@ -8,8 +8,8 @@ using SecretSantaApplication.Data;
 namespace SecretSantaApplication.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20201201200503_InitUserAndProfile")]
-    partial class InitUserAndProfile
+    [Migration("20201203162021_InitUsersAndProfile")]
+    partial class InitUsersAndProfile
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +39,8 @@ namespace SecretSantaApplication.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(18);
 
                     b.HasKey("EmailAddress");
 

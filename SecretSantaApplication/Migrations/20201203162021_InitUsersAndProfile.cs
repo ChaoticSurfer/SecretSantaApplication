@@ -2,7 +2,7 @@
 
 namespace SecretSantaApplication.Migrations
 {
-    public partial class InitUserAndProfile : Migration
+    public partial class InitUsersAndProfile : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,7 +24,7 @@ namespace SecretSantaApplication.Migrations
                 columns: table => new
                 {
                     EmailAddress = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: true)
+                    Password = table.Column<string>(maxLength: 18, nullable: true)
                 },
                 constraints: table =>
                 {

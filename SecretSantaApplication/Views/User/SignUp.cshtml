@@ -13,11 +13,11 @@
         </div>
         <div>
             <input class="form-control" type="password" asp-for="Password" name="Password" placeholder="Password" required="required"/>
-            <span class="text-danger">@ViewData["Error"]</span>
+            <span class="text-danger" asp-validation-for="Password"></span>
         </div>
         <div>
-            <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" required="required"/>
-            <span class="text-danger" asp-validation-for="Password"></span>
+            <input type="password" class="form-control" asp-for="ConfirmPassword" name="confirmPassword" placeholder="Confirm Password" required="required"/>
+            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
         </div>
         <span class="text-danger"> @ViewData["Message"]</span>
         <button class="btn btn-success" type="submit">Sign Up</button>
