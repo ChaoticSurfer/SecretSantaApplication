@@ -11,5 +11,6 @@ namespace SecretSantaApplication.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<SecretSanta> SecretSantas { get; set; }
     }
 }

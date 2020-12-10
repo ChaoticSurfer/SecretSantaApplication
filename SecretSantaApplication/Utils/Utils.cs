@@ -8,7 +8,8 @@ namespace SecretSantaApplication.Utils
 {
     public static class Utils
     {
-        public const string EMAIL_ADDRESS = "email";
+        public const string EmailAddress = "email";
+        public const string GameNotStarted = "Game has not started yet, please wait";
 
         public static void CreateUserIdentity(HttpContext httpContext, String emailAddress)
         {
