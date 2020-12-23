@@ -1,8 +1,22 @@
-﻿@{
+﻿@model Profile
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <img src="~/images/santa.png" alt="" width="200" height="200">
+    <h3 style="color: red; margin-bottom: 30px;">Hello Dear Secret Santa!</h3>
+
+    @{
+        if (Model == null)
+        {
+            <p style="color: green; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px">@ViewData["Message"]</p>
+        }
+        else
+        {
+            <p style="color: blue; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px" style="text-align: center"> Target Email Address : @Model.EmailAddress </p>
+            <p style="color: orange; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px"> Birth Date : @Model.BirthDate </p>
+            <p style="color: green; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px">Letter To Secret Santa: @Model.LetterToSecretSanta</p>
+        }
+    }
 </div>

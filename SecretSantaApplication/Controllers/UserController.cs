@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -45,13 +44,13 @@ namespace SecretSantaApplication.Controllers
 
                 ViewData["Message"] = "User with this email address already exists.";
             }
-       
+
             return View();
         }
 
         public IActionResult SignIn()
         {
-            HttpContext.Session.Remove(Utils.Utils.EMAIL_ADDRESS);
+            HttpContext.Session.Remove(Utils.Utils.EmailAddress);
             return View();
         }
 
@@ -76,10 +75,12 @@ namespace SecretSantaApplication.Controllers
                 }
                 else
                 {
-                    HttpContext.Session.SetString(Utils.Utils.EMAIL_ADDRESS, user.EmailAddress);
+                    HttpContext.Session.SetString(Utils.Utils.EmailAddress, user.EmailAddress);
                     Utils.Utils.CreateUserIdentity(HttpContext, user.EmailAddress);
 
-                    return RedirectToAction("Index", "Home");
+                    var checkProfileIsCompleted = _appContext.Profiles.SingleOrDefault(p =>
+                        p.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
+                    return checkProfileIsCompleted != null ? RedirectToAction("Index", "Home") : RedirectToAction("Profile", "User");
                 }
             }
 
@@ -93,16 +94,16 @@ namespace SecretSantaApplication.Controllers
                 HttpContext.Session.SetString("email", email);
             var profile =
                 _appContext.Profiles.SingleOrDefault(p =>
-                    p.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS));
+                    p.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
             if (profile != null)
             {
-                ViewData["Email"] = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS);
+                ViewData["Email"] = HttpContext.Session.GetString(Utils.Utils.EmailAddress);
                 ViewData["birthDate"] = profile.BirthDate;
                 ViewData["letterToSecretSanta"] = profile.LetterToSecretSanta;
                 return View();
             }
 
-            ViewData["Email"] = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS);
+            ViewData["Email"] = HttpContext.Session.GetString(Utils.Utils.EmailAddress);
             return View();
         }
 
@@ -111,7 +112,7 @@ namespace SecretSantaApplication.Controllers
         public IActionResult Profile(string birthDate, string letterToSecretSanta)
         {
             var profile = _appContext.Profiles.SingleOrDefault(u =>
-                u.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS));
+                u.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
             if (profile != null)
             {
                 _appContext.Remove(profile);
@@ -119,7 +120,7 @@ namespace SecretSantaApplication.Controllers
 
             _appContext.Profiles.Add(new Profile
             {
-                EmailAddress = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS), BirthDate = birthDate,
+                EmailAddress = HttpContext.Session.GetString(Utils.Utils.EmailAddress), BirthDate = birthDate,
                 LetterToSecretSanta = letterToSecretSanta
             });
             _appContext.SaveChanges();
