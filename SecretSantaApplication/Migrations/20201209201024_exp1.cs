@@ -2,7 +2,7 @@
 
 namespace SecretSantaApplication.Migrations
 {
-    public partial class InitUsersAndProfile : Migration
+    public partial class exp1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,6 +17,20 @@ namespace SecretSantaApplication.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Profiles", x => x.EmailAddress);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    Name = table.Column<string>(nullable: false),
+                    Creator = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    LogoName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,6 +50,9 @@ namespace SecretSantaApplication.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Profiles");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Users");
