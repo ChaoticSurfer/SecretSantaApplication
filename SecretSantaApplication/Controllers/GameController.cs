@@ -10,11 +10,11 @@ namespace SecretSantaApplication.Controllers
 {
     public class GameController : Controller
     {
-        private readonly Db_AppContext _dbAppContext;
+        private readonly AppDbContext _appDbContext;
 
-        public GameController(Db_AppContext dbAppContext)
+        public GameController(AppDbContext appDbContext)
         {
-            _dbAppContext = dbAppContext;
+            _appDbContext = appDbContext;
         }
 
         [Authorize]
@@ -26,18 +26,18 @@ namespace SecretSantaApplication.Controllers
         [Authorize]
         public IActionResult Start()
         {
-            _dbAppContext.SecretSantas.RemoveRange(_dbAppContext.SecretSantas);
+            _appDbContext.SecretSantas.RemoveRange(_appDbContext.SecretSantas);
 
-            var players = _dbAppContext.Users.ToList();
+            var players = _appDbContext.Users.ToList();
             var targets = GetSantaTargets(players);
             foreach (var pairs in targets)
             {
-                _dbAppContext.Add(new SecretSanta
+                _appDbContext.Add(new SecretSanta
                 {
                     Santa = pairs.Item1.EmailAddress,
                     Target = pairs.Item2.EmailAddress
                 });
-                _dbAppContext.SaveChanges();
+                _appDbContext.SaveChanges();
             }
 
             return RedirectToAction("Index", "Home");

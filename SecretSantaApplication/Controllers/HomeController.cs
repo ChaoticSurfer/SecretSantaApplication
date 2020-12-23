@@ -5,40 +5,41 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSantaApplication.Data;
 using SecretSantaApplication.Models;
+using SecretSantaApplication.Helpers;
 
 namespace SecretSantaApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Db_AppContext _dbAppContext;
+        private readonly AppDbContext _appDbContext;
 
-        public HomeController(Db_AppContext dbAppContext)
+        public HomeController(AppDbContext appDbContext)
         {
-            _dbAppContext = dbAppContext;
+            _appDbContext = appDbContext;
         }
 
         [Authorize]
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString(Utils.Utils.EmailAddress) == null)
+            if (HttpContext.Session.GetString(ConstantFields.EmailAddress) == null)
             {
                 return RedirectToAction("SignOut", "User");
             }
 
-            if (_dbAppContext.Profiles.SingleOrDefault(p =>
-                p.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress)) == null)
+            if (_appDbContext.Profiles.SingleOrDefault(p =>
+                p.EmailAddress == HttpContext.Session.GetString(ConstantFields.EmailAddress)) == null)
                 return RedirectToAction("Profile", "User");
 
-            var secretSanta = _dbAppContext.SecretSantas.SingleOrDefault(s =>
-                s.Santa == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
+            var secretSanta = _appDbContext.SecretSantas.SingleOrDefault(s =>
+                s.Santa == HttpContext.Session.GetString(ConstantFields.EmailAddress));
             if (secretSanta != null)
             {
-                var profile = _dbAppContext.Profiles.SingleOrDefault(p => p.EmailAddress == secretSanta.Target);
+                var profile = _appDbContext.Profiles.SingleOrDefault(p => p.EmailAddress == secretSanta.Target);
                 if (profile != null)
                     return View(profile);
             }
 
-            ViewData["Message"] = Utils.Utils.GameNotStarted;
+            ViewData["Message"] = ConstantFields.GameNotStarted;
             return View();
         }
 

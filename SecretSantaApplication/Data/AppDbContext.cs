@@ -3,9 +3,9 @@ using SecretSantaApplication.Models;
 
 namespace SecretSantaApplication.Data
 {
-    public class Db_AppContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public Db_AppContext(DbContextOptions<Db_AppContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 

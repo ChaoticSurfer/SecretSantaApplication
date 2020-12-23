@@ -7,15 +7,15 @@ using SecretSantaApplication.Data;
 
 namespace SecretSantaApplication.Migrations
 {
-    [DbContext(typeof(Db_AppContext))]
-    [Migration("20201207151150_InitSecretSantas")]
-    partial class InitSecretSantas
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20201223202138_SecretSanta init")]
+    partial class SecretSantainit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("SecretSantaApplication.Models.Profile", b =>
                 {
@@ -31,6 +31,25 @@ namespace SecretSantaApplication.Migrations
                     b.HasKey("EmailAddress");
 
                     b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("SecretSantaApplication.Models.Room", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Creator")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LogoName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("SecretSantaApplication.Models.SecretSanta", b =>
@@ -52,8 +71,8 @@ namespace SecretSantaApplication.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(18);
+                        .HasMaxLength(18)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("EmailAddress");
 

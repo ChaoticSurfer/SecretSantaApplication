@@ -2,7 +2,7 @@
 
 namespace SecretSantaApplication.Migrations
 {
-    public partial class exp2 : Migration
+    public partial class SecretSantainit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

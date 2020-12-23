@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SecretSantaApplication.Services;
 using SecretSantaApplication.Data;
 
 namespace SecretSantaApplication
@@ -21,7 +22,7 @@ namespace SecretSantaApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<Db_AppContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("SecretSantaConnection"));
             });
@@ -30,9 +31,11 @@ namespace SecretSantaApplication
                 config.Cookie.Name = "Auth.Cookie";
                 config.LoginPath = "/User/SignIn/";
             });
-            services.AddSession(options => {   
-                options.IdleTimeout = TimeSpan.FromMinutes(30);   
-            }); 
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+            services.AddSingleton<PasswordSecurity>();
+            services.AddSingleton<Identity>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,11 +62,7 @@ namespace SecretSantaApplication
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");    
-                
-                // endpoints.MapControllerRoute(
-                //     name: "DeleteRoom",
-                //     pattern: "{controller=Home}/{action=Index}/{roomName}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
