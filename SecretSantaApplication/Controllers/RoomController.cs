@@ -1,15 +1,11 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SecretSantaApplication.Data;
 using SecretSantaApplication.Models;
@@ -61,7 +57,7 @@ namespace SecretSantaApplication.Controllers
                     await room.ImageLogoFile.CopyToAsync(fileStream);
                 }
 
-                room.Creator = "creator";
+                room.Creator = HttpContext.Session.GetString(Utils.Utils.EmailAddress);
                 _dbAppContext.Add(room);
                 await _dbAppContext.SaveChangesAsync();
                 return Redirect("/");
@@ -72,7 +68,7 @@ namespace SecretSantaApplication.Controllers
 
 
         [Authorize]
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
             Room room = _dbAppContext.Rooms.FirstOrDefault(r => r.Name == id);
@@ -81,7 +77,7 @@ namespace SecretSantaApplication.Controllers
                 return NotFound();
             }
 
-            string creatorMail = HttpContext.Session.GetString(Utils.Utils.EMAIL_ADDRESS);
+            string creatorMail = HttpContext.Session.GetString(Utils.Utils.EmailAddress);
             if (room.Creator != creatorMail)
             {
                 return Unauthorized();

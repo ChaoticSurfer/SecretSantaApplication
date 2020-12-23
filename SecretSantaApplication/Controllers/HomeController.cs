@@ -1,7 +1,5 @@
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +10,11 @@ namespace SecretSantaApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Db_AppContext _appContext;
+        private readonly Db_AppContext _dbAppContext;
 
-        public HomeController(Db_AppContext appContext)
+        public HomeController(Db_AppContext dbAppContext)
         {
-            _appContext = appContext;
+            _dbAppContext = dbAppContext;
         }
 
         [Authorize]
@@ -24,18 +22,18 @@ namespace SecretSantaApplication.Controllers
         {
             if (HttpContext.Session.GetString(Utils.Utils.EmailAddress) == null)
             {
-                return RedirectToAction("SignOut", "Home");
+                return RedirectToAction("SignOut", "User");
             }
 
-            if (_appContext.Profiles.SingleOrDefault(p =>
+            if (_dbAppContext.Profiles.SingleOrDefault(p =>
                 p.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress)) == null)
                 return RedirectToAction("Profile", "User");
 
-            var secretSanta = _appContext.SecretSantas.SingleOrDefault(s =>
+            var secretSanta = _dbAppContext.SecretSantas.SingleOrDefault(s =>
                 s.Santa == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
             if (secretSanta != null)
             {
-                var profile = _appContext.Profiles.SingleOrDefault(p => p.EmailAddress == secretSanta.Target);
+                var profile = _dbAppContext.Profiles.SingleOrDefault(p => p.EmailAddress == secretSanta.Target);
                 if (profile != null)
                     return View(profile);
             }
@@ -45,18 +43,6 @@ namespace SecretSantaApplication.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> SignOut() // should be part of User
-        {
-            await HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
-        }
-
-        //------
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

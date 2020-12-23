@@ -1,21 +1,20 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SecretSantaApplication.Data;
 using SecretSantaApplication.Extensions;
 using SecretSantaApplication.Models;
-using AppContext = SecretSantaApplication.Data.AppContext;
 
 namespace SecretSantaApplication.Controllers
 {
     public class GameController : Controller
     {
-        private readonly AppContext _appContext;
+        private readonly Db_AppContext _dbAppContext;
 
-        public GameController(AppContext appContext)
+        public GameController(Db_AppContext dbAppContext)
         {
-            _appContext = appContext;
+            _dbAppContext = dbAppContext;
         }
 
         [Authorize]
@@ -27,18 +26,18 @@ namespace SecretSantaApplication.Controllers
         [Authorize]
         public IActionResult Start()
         {
-            _appContext.SecretSantas.RemoveRange(_appContext.SecretSantas);
+            _dbAppContext.SecretSantas.RemoveRange(_dbAppContext.SecretSantas);
 
-            var players = _appContext.Users.ToList();
+            var players = _dbAppContext.Users.ToList();
             var targets = GetSantaTargets(players);
             foreach (var pairs in targets)
             {
-                _appContext.Add(new SecretSanta
+                _dbAppContext.Add(new SecretSanta
                 {
                     Santa = pairs.Item1.EmailAddress,
                     Target = pairs.Item2.EmailAddress
                 });
-                _appContext.SaveChanges();
+                _dbAppContext.SaveChanges();
             }
 
             return RedirectToAction("Index", "Home");
