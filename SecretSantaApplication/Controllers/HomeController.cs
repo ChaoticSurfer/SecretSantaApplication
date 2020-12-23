@@ -1,19 +1,20 @@
-﻿using System.Linq;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using AppContext = SecretSantaApplication.Data.AppContext;
 using Microsoft.AspNetCore.Mvc;
-
+using SecretSantaApplication.Data;
+using SecretSantaApplication.Models;
 
 namespace SecretSantaApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppContext _appContext;
+        private readonly Db_AppContext _appContext;
 
-        public HomeController(AppContext appContext)
+        public HomeController(Db_AppContext appContext)
         {
             _appContext = appContext;
         }
@@ -43,10 +44,23 @@ namespace SecretSantaApplication.Controllers
             return View();
         }
 
-        public async Task<IActionResult> SignOut()
+        [Authorize]
+        public async Task<IActionResult> SignOut() // should be part of User
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
+        }
+
+        //------
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }

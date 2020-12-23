@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AppContext = SecretSantaApplication.Data.AppContext;
+using SecretSantaApplication.Data;
 
 namespace SecretSantaApplication
 {
@@ -21,7 +21,7 @@ namespace SecretSantaApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<AppContext>(options =>
+            services.AddDbContext<Db_AppContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("SecretSantaConnection"));
             });
@@ -59,7 +59,11 @@ namespace SecretSantaApplication
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");    
+                
+                // endpoints.MapControllerRoute(
+                //     name: "DeleteRoom",
+                //     pattern: "{controller=Home}/{action=Index}/{roomName}");
             });
         }
     }

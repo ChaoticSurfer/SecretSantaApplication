@@ -2,20 +2,21 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SecretSantaApplication.Data;
 using SecretSantaApplication.Models;
-using AppContext = SecretSantaApplication.Data.AppContext;
 
 namespace SecretSantaApplication.Controllers
 {
     public class UserController : Controller
     {
-        private readonly AppContext _appContext;
+        private readonly Db_AppContext _dbAppContext;
 
-        public UserController(AppContext appContext)
+        public UserController(Db_AppContext dbAppContext)
         {
-            _appContext = appContext;
+            _dbAppContext = dbAppContext;
         }
 
         public IActionResult SignUp()
@@ -28,16 +29,16 @@ namespace SecretSantaApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                var checkedUser = _appContext.Users.SingleOrDefault(u => u.EmailAddress == user.EmailAddress);
+                var checkedUser = _dbAppContext.Users.SingleOrDefault(u => u.EmailAddress == user.EmailAddress);
                 if (checkedUser == null)
                 {
-                    await _appContext.AddAsync(new User
+                    await _dbAppContext.AddAsync(new User
                     {
                         EmailAddress = user.EmailAddress,
                         Password = user.Password
                     });
 
-                    await _appContext.SaveChangesAsync();
+                    await _dbAppContext.SaveChangesAsync();
                     Utils.Utils.CreateUserIdentity(HttpContext, user.EmailAddress);
                     return RedirectToAction("Profile", "User", new {email = user.EmailAddress});
                 }
@@ -59,10 +60,10 @@ namespace SecretSantaApplication.Controllers
         {
             if (user.EmailAddress != null && user.Password != null)
             {
-                var checkEmailAddress = _appContext.Users.FirstOrDefault(u =>
+                var checkEmailAddress = _dbAppContext.Users.FirstOrDefault(u =>
                     u.EmailAddress == user.EmailAddress);
 
-                var checkPassword = _appContext.Users.FirstOrDefault(u =>
+                var checkPassword = _dbAppContext.Users.FirstOrDefault(u =>
                     u.Password == user.Password);
 
                 if (checkEmailAddress == null)
@@ -93,7 +94,7 @@ namespace SecretSantaApplication.Controllers
             if (email != null)
                 HttpContext.Session.SetString("email", email);
             var profile =
-                _appContext.Profiles.SingleOrDefault(p =>
+                _dbAppContext.Profiles.SingleOrDefault(p =>
                     p.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
             if (profile != null)
             {
@@ -111,19 +112,19 @@ namespace SecretSantaApplication.Controllers
         [HttpPost]
         public IActionResult Profile(string birthDate, string letterToSecretSanta)
         {
-            var profile = _appContext.Profiles.SingleOrDefault(u =>
+            var profile = _dbAppContext.Profiles.SingleOrDefault(u =>
                 u.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
             if (profile != null)
             {
-                _appContext.Remove(profile);
+                _dbAppContext.Remove(profile);
             }
 
-            _appContext.Profiles.Add(new Profile
+            _dbAppContext.Profiles.Add(new Profile
             {
                 EmailAddress = HttpContext.Session.GetString(Utils.Utils.EmailAddress), BirthDate = birthDate,
                 LetterToSecretSanta = letterToSecretSanta
             });
-            _appContext.SaveChanges();
+            _dbAppContext.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
     }

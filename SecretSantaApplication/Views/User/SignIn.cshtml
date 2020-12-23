@@ -3,11 +3,21 @@
     ViewData["Title"] = "Sign In";
     Layout = "_auth";
 }
+<style>
+     .field-validation-error    {color: #f00;}
+     .field-validation-valid    { display: none;}
+     .input-validation-error    { border: 1px solid #f00; background-color: #fee; }
+     .validation-summary-errors { font-weight: bold; color: #f00;}
+     .validation-summary-valid  { display: none;}
+</style>
 
 <div id="sign-in">
     <img src="~/images/santa.png" alt="" width="200" height="200">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <form asp-controller="User" asp-action="SignIn" method="post">
+        <div class="validation-summary-errors">
+        </div>
+        
         <div>
             <input type="email" class="form-control" asp-for="EmailAddress" name="EmailAddress" placeholder="Email Address" required="required"/>
             <span class="text-danger" asp-validation-for="EmailAddress"></span>

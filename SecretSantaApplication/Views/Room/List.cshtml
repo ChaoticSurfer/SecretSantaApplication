@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Rooms List";
+
+}
+
+@model Microsoft.EntityFrameworkCore.DbSet<Room>;
+
+@section css{
+    <link rel="stylesheet" href="css/ListRoom.css">
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+
+<div class="text-center align-content-center justify-content-center">
+
+    @foreach (Room Room in Model)
+    {
+        <div class="block container-md">
+            <span class="float-left name"> @Room.Name</span>
+            <br>
+            <p class="container block">
+                @Room.Description
+            </p>
+            <span class="float-right align-bottom container block">
+                @Room.Creator
+            </span>
+            <img src="~/images/RoomLogoImages/@Room.LogoName" alt="@Room.LogoName" asp-append-version="true" width="250px" height="250px">
+
+
+            @* <a asp-controller="Room" method="post" asp-action="Delete" asp-route-id="@Room.Name" asp-area=""> Delete room</a> *@
+            
+            
+            <form asp-controller="Room" method="post" asp-action="Delete" asp-route-id="@Room.Name">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    }
+</div>
+
+@* asp-area="" asp-controller="Home" asp-action="Index" *@

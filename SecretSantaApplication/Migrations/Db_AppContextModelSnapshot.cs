@@ -6,8 +6,8 @@ using SecretSantaApplication.Data;
 
 namespace SecretSantaApplication.Migrations
 {
-    [DbContext(typeof(AppContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Db_AppContext))]
+    partial class Db_AppContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,25 @@ namespace SecretSantaApplication.Migrations
                     b.HasKey("EmailAddress");
 
                     b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("SecretSantaApplication.Models.Room", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Creator")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LogoName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("SecretSantaApplication.Models.SecretSanta", b =>
