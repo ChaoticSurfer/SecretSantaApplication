@@ -7,7 +7,7 @@ using SecretSantaApplication.Data;
 
 namespace SecretSantaApplication.Migrations
 {
-    [DbContext(typeof(AppContext))]
+    [DbContext(typeof(Db_AppContext))]
     [Migration("20201207151150_InitSecretSantas")]
     partial class InitSecretSantas
     {

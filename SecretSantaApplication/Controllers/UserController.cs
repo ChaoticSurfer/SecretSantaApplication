@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSantaApplication.Data;
@@ -79,7 +79,7 @@ namespace SecretSantaApplication.Controllers
                     HttpContext.Session.SetString(Utils.Utils.EmailAddress, user.EmailAddress);
                     Utils.Utils.CreateUserIdentity(HttpContext, user.EmailAddress);
 
-                    var checkProfileIsCompleted = _appContext.Profiles.SingleOrDefault(p =>
+                    var checkProfileIsCompleted = _dbAppContext.Profiles.SingleOrDefault(p =>
                         p.EmailAddress == HttpContext.Session.GetString(Utils.Utils.EmailAddress));
                     return checkProfileIsCompleted != null ? RedirectToAction("Index", "Home") : RedirectToAction("Profile", "User");
                 }
@@ -125,6 +125,12 @@ namespace SecretSantaApplication.Controllers
                 LetterToSecretSanta = letterToSecretSanta
             });
             _dbAppContext.SaveChanges();
+            return RedirectToAction("Index", "Home");
+        }
+        
+        public new async Task<IActionResult> SignOut() 
+        {
+            await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }
