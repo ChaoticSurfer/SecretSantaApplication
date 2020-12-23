@@ -1,17 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace SecretSantaApplication.Utils
+namespace SecretSantaApplication.Services
 {
-    public static class Utils
+    public class Identity
     {
-        public const string EmailAddress = "email";
-        public const string GameNotStarted = "Game has not started yet, please wait";
-
-        public static void CreateUserIdentity(HttpContext httpContext, String emailAddress)
+        public void CreateUserIdentity(HttpContext httpContext, String emailAddress)
         {
             var userClaims = new List<Claim>()
             {

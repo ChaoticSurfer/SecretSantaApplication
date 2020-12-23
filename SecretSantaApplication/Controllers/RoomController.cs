@@ -14,22 +14,18 @@ namespace SecretSantaApplication.Controllers
 {
     public class RoomController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        private readonly Db_AppContext _dbAppContext;
+        private readonly AppDbContext _appDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public RoomController(ILogger<HomeController> logger, Db_AppContext dbAppContext,
-            IWebHostEnvironment webHostEnvironment)
+        public RoomController(AppDbContext appDbContext, IWebHostEnvironment webHostEnvironment)
         {
-            _logger = logger;
-            _dbAppContext = dbAppContext;
+            _appDbContext = appDbContext;
             _webHostEnvironment = webHostEnvironment;
         }
 
         public ViewResult List()
         {
-            var rooms = _dbAppContext.Rooms;
+            var rooms = _appDbContext.Rooms;
             return View(rooms);
         }
 
@@ -57,9 +53,9 @@ namespace SecretSantaApplication.Controllers
                     await room.ImageLogoFile.CopyToAsync(fileStream);
                 }
 
-                room.Creator = HttpContext.Session.GetString(Utils.Utils.EmailAddress);
-                _dbAppContext.Add(room);
-                await _dbAppContext.SaveChangesAsync();
+                room.Creator = HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress);
+                _appDbContext.Add(room);
+                await _appDbContext.SaveChangesAsync();
                 return Redirect("/");
             }
 
@@ -71,18 +67,18 @@ namespace SecretSantaApplication.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
-            Room room = _dbAppContext.Rooms.FirstOrDefault(r => r.Name == id);
+            Room room = _appDbContext.Rooms.FirstOrDefault(r => r.Name == id);
             if (room == null)
             {
                 return NotFound();
             }
 
-            string creatorMail = HttpContext.Session.GetString(Utils.Utils.EmailAddress);
+            string creatorMail = HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress);
             if (room.Creator != creatorMail)
             {
                 return Unauthorized();
             }
-            
+
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             string path = Path.Combine(wwwRootPath, "images/RoomLogoImages/", room.LogoName);
             if (System.IO.File.Exists(path))
@@ -90,8 +86,8 @@ namespace SecretSantaApplication.Controllers
                 System.IO.File.Delete(path);
             }
 
-            _dbAppContext.Rooms.Remove(room);
-            await _dbAppContext.SaveChangesAsync();
+            _appDbContext.Rooms.Remove(room);
+            await _appDbContext.SaveChangesAsync();
             return RedirectToActionPermanent(nameof(List), "Room");
         }
     }
