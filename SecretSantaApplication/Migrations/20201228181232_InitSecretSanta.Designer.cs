@@ -8,8 +8,8 @@ using SecretSantaApplication.Data;
 namespace SecretSantaApplication.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201223202138_SecretSanta init")]
-    partial class SecretSantainit
+    [Migration("20201228181232_InitSecretSanta")]
+    partial class InitSecretSanta
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
