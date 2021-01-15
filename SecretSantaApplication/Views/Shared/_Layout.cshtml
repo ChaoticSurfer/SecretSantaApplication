@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SecretSantaApplication.Helpers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -26,13 +27,23 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="Create">Create Room</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Profile</a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="SignOut">Sign Out</a>
-                    </li>
+                    @if (ViewContext.HttpContext.Session.Keys.Contains(ConstantFields.EmailAddress))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Profile</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="SignOut">Sign Out</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="SignIn">Sign In</a>
+                        </li>
+                    }
+
                 </ul>
             </div>
         </div>
