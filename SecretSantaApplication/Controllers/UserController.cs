@@ -38,6 +38,7 @@ namespace SecretSantaApplication.Controllers
                 var checkedUser = _appDbContext.Users.SingleOrDefault(u => u.EmailAddress == user.EmailAddress);
                 if (checkedUser == null)
                 {
+                    HttpContext.Session.SetString(ConstantFields.EmailAddress, user.EmailAddress);
                     await _appDbContext.AddAsync(new User
                     {
                         EmailAddress = user.EmailAddress,
@@ -96,10 +97,8 @@ namespace SecretSantaApplication.Controllers
         }
 
         [Authorize]
-        public IActionResult Profile([Optional] string email, [Optional] string message, [Optional] string otherParams)
+        public IActionResult Profile([Optional] string param)
         {
-            if (email != null)
-                HttpContext.Session.SetString("email", email);
             var profile =
                 _appDbContext.Profiles.SingleOrDefault(p =>
                     p.EmailAddress == HttpContext.Session.GetString(ConstantFields.EmailAddress));
@@ -112,7 +111,7 @@ namespace SecretSantaApplication.Controllers
             }
 
             ViewData["Email"] = HttpContext.Session.GetString(ConstantFields.EmailAddress);
-            ViewData["Message"] = message;
+            ViewData["Message"] = param;
             return View();
         }
 
