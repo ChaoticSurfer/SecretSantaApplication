@@ -26,13 +26,7 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="Create">Create Room</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Profile</a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="SignOut">Sign Out</a>
-                    </li>
+                    @Html.Partial("CheckIfAuthedForLayout")
                 </ul>
             </div>
         </div>
