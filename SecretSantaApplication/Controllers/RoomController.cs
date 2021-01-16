@@ -31,8 +31,13 @@ namespace SecretSantaApplication.Controllers
 
 
         [HttpGet]
-        public ViewResult Create()
+        public async Task<ActionResult> Create()
         {
+            var profileIsCompleted = _appDbContext.Profiles.SingleOrDefault(p =>
+                p.EmailAddress == HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress));
+            if (profileIsCompleted == null)
+                return RedirectToAction("Profile", "User",
+                    new {message = "You have to fill your profile, if you want to create game rooms!"});
             return View();
         }
 

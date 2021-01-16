@@ -96,7 +96,7 @@ namespace SecretSantaApplication.Controllers
         }
 
         [Authorize]
-        public IActionResult Profile([Optional] string email)
+        public IActionResult Profile([Optional] string email, [Optional] string message, [Optional] string otherParams)
         {
             if (email != null)
                 HttpContext.Session.SetString("email", email);
@@ -112,6 +112,7 @@ namespace SecretSantaApplication.Controllers
             }
 
             ViewData["Email"] = HttpContext.Session.GetString(ConstantFields.EmailAddress);
+            ViewData["Message"] = message;
             return View();
         }
 
