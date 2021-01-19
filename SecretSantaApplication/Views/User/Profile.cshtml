@@ -4,6 +4,7 @@
 }
 
 <div id="profile">
+    <h5 style="text-decoration: underline" class="text-danger">@ViewData["Message"]</h5>
     <form asp-action="Profile" method="post">
         <div>
             <p lass="form-control">Email Address : @ViewData["Email"]</p>
