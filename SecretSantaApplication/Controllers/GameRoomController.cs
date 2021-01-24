@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSantaApplication.Data;
+using SecretSantaApplication.Extensions;
+using SecretSantaApplication.Helpers;
 using SecretSantaApplication.Models;
 
 namespace SecretSantaApplication.Controllers
@@ -118,6 +121,48 @@ namespace SecretSantaApplication.Controllers
             _appDbContext.Add(userToRoom);
             _appDbContext.SaveChanges();
             return RedirectPermanent("/");
+        }
+
+        [Authorize]
+        public IActionResult Start()
+        {
+            var room = _appDbContext.Rooms.SingleOrDefault(r =>
+                r.Creator == HttpContext.Session.GetString(ConstantFields.EmailAddress));
+            var users = _appDbContext.UserToRooms.Where(r => r.Name == room.Name).ToList();
+            var santaTargets = GetSantaTargets(users);
+            foreach (var pairs in santaTargets)
+            {
+                _appDbContext.Add(new SecretSanta
+                {
+                    Santa = pairs.Item1.EmailAddress,
+                    Target = pairs.Item2.EmailAddress
+                });
+                _appDbContext.SaveChanges();
+            }
+
+            room.IsStarted = true;
+            _appDbContext.Rooms.Update(room);
+            _appDbContext.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        private static IEnumerable<(T, T)> GetSantaTargets<T>(List<T> players)
+        {
+            var targets = new List<(T, T)>();
+            var shuffledPlayers = players.Shuffle().ToList();
+            for (int i = 0; i < shuffledPlayers.Count; i++)
+            {
+                if (i == shuffledPlayers.Count - 1)
+                {
+                    targets.Add((shuffledPlayers[i], shuffledPlayers[0]));
+                    break;
+                }
+
+                targets.Add((shuffledPlayers[i], shuffledPlayers[i + 1]));
+            }
+
+            return targets;
         }
     }
 }
