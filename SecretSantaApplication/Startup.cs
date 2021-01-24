@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +58,15 @@ namespace SecretSantaApplication
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            AppDbContext context = app.ApplicationServices
+                .CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+            
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
