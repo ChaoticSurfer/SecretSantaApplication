@@ -9,7 +9,7 @@ using SecretSantaApplication.Data;
 namespace SecretSantaApplication.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210124100641_InitGameRooms")]
+    [Migration("20210124135815_InitGameRooms")]
     partial class InitGameRooms
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,9 @@ namespace SecretSantaApplication.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsStarted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LogoName")
                         .HasColumnType("TEXT");

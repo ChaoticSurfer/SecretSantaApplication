@@ -7,6 +7,13 @@ namespace SecretSantaApplication.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<bool>(
+                name: "IsStarted",
+                table: "Rooms",
+                type: "INTEGER",
+                nullable: false,
+                defaultValue: false);
+
             migrationBuilder.CreateTable(
                 name: "UserToRooms",
                 columns: table => new
@@ -42,6 +49,10 @@ namespace SecretSantaApplication.Migrations
         {
             migrationBuilder.DropTable(
                 name: "UserToRooms");
+
+            migrationBuilder.DropColumn(
+                name: "IsStarted",
+                table: "Rooms");
         }
     }
 }

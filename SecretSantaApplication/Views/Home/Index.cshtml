@@ -3,20 +3,30 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <img src="~/images/santa.png" alt="" width="200" height="200">
-    <h3 style="color: red; margin-bottom: 30px;">Hello Dear Secret Santa!</h3>
+<div>
 
-    @{
-        if (Model == null)
-        {
-            <p style="color: green; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px">@ViewData["Message"]</p>
+    @if ((bool) ViewData["IsStarted"] == false)
+    {
+        <form style="text-align: end" asp-action="Start" asp-controller="Room" method="post">
+            <button class="btn btn-success" type="submit">Start Game</button>
+        </form>    }
+
+    <div class="text-center">
+        <img src="~/images/santa.png" alt="" width="200" height="200">
+        <h3 style="color: red; margin-bottom: 30px;">Hello Dear Secret Santa!</h3>
+
+        @{
+            if (Model == null)
+            {
+                <p style="color: green; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px">@ViewData["Message"]</p>
+            }
+            else
+            {
+                <p style="color: blue; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px" style="text-align: center"> Target Email Address : @Model.EmailAddress </p>
+                <p style="color: orange; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px"> Birth Date : @Model.BirthDate </p>
+                <p style="color: green; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px">Letter To Secret Santa: @Model.LetterToSecretSanta</p>
+            }
         }
-        else
-        {
-            <p style="color: blue; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px" style="text-align: center"> Target Email Address : @Model.EmailAddress </p>
-            <p style="color: orange; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px"> Birth Date : @Model.BirthDate </p>
-            <p style="color: green; font-size: 20px; border: 1px solid black; border-radius: 10px; padding: 30px">Letter To Secret Santa: @Model.LetterToSecretSanta</p>
-        }
-    }
+    </div>
+
 </div>

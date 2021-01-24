@@ -12,6 +12,8 @@ namespace SecretSantaApplication.Models
         [Key] public string Name { get; set; }
         public string Description { get; set; }
         public string LogoName { get; set; }
+        
+        public bool IsStarted { get; set; }
 
         [DisplayName("Upload Room Logo")]
         [NotMapped]

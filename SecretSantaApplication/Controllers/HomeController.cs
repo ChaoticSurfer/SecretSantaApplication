@@ -32,13 +32,22 @@ namespace SecretSantaApplication.Controllers
 
             var secretSanta = _appDbContext.SecretSantas.SingleOrDefault(s =>
                 s.Santa == HttpContext.Session.GetString(ConstantFields.EmailAddress));
+
+            var room = _appDbContext.Rooms.SingleOrDefault(room =>
+                room.Creator == HttpContext.Session.GetString(ConstantFields.EmailAddress));
+
+            if (room != null && room.IsStarted == false)
+
+                ViewData["IsStarted"] = false;
+            else
+                ViewData["IsStarted"] = true;
+            
             if (secretSanta != null)
             {
                 var profile = _appDbContext.Profiles.SingleOrDefault(p => p.EmailAddress == secretSanta.Target);
                 if (profile != null)
                     return View(profile);
             }
-
             ViewData["Message"] = ConstantFields.GameNotStarted;
             return View();
         }

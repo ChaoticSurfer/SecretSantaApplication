@@ -43,6 +43,9 @@ namespace SecretSantaApplication.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsStarted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LogoName")
                         .HasColumnType("TEXT");
 
