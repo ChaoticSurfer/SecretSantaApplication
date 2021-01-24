@@ -1,49 +1,39 @@
+@using SecretSantaApplication.Helpers
 @{
     ViewData["Title"] = "Rooms List";
 
-}
-
-@using SecretSantaApplication.Helpers
-@model Microsoft.EntityFrameworkCore.DbSet<Room>;
-
-@section css{
-    <link rel="stylesheet" href="css/ListRoom.css">
 }
 
 <div class="text-center align-content-center justify-content-center">
     <h5 style="text-decoration: underline" class="text-danger">@ViewData["Message"]</h5>
     @foreach (Room room in Model)
     {
-        <div class="block container-md">
-            <span class="float-left name"> @room.Name</span>
+        <div style="width: 500px;  border: 1px solid black; border-radius: 10px; padding: 50px; margin: 20px auto auto;">
+            <h5 style="text-align: center; font-weight: bold; color: purple">Name: @room.Name</h5>
+            <h6 style="color: orange"> Description: @room.Description</h6>
+            <h6 style="color: orangered">Owner : @room.Creator</h6>
+            <img style="border-radius: 100px; margin-top: 20px" src="~/images/RoomLogoImages/@room.LogoName" alt="@room.LogoName"  width="200px" height="200px">
             <br>
-            <p class="container block">
-                @room.Description
-            </p>
-            <span class="float-right align-bottom container block">
-                @room.Creator
-            </span>
-            <img src="~/images/RoomLogoImages/@room.LogoName" alt="@room.LogoName" asp-append-version="true" width="250px" height="250px">
             @if (room.IsStarted)
             {
-                <p style="color: green; font-weight: bold">
+                <p style="color: green; font-weight: bold; margin-top: 20px; text-decoration: underline">
                     Status : @ConstantFields.STARTED
                 </p>
             }
             else
             {
-                <p style="color: red; font-weight: bold">
+                <p style="color: red; font-weight: bold; margin-top: 20px; text-decoration: underline">
                     Status : @ConstantFields.NOT_STARTED
                 </p>
             }
 
-            <form asp-controller="Room" method="post" asp-route-returnurl="Room/list" asp-action="Delete" asp-route-roomName="@room.Name">
-                <button type="submit">Delete</button>
-            </form>
-
             <form asp-controller="Room" asp-route-returnurl="Room" method="post" asp-action="Join" asp-route-roomName="@room.Name">
                 <input type="hidden" value="@room.Name" name="RoomName">
-                <button type="submit">Join</button>
+                <button style="width: 100px; margin-top: 10px;" class="btn btn-success" type="submit">Join</button>
+            </form>
+
+            <form asp-controller="Room" method="post" asp-route-returnurl="Room/list" asp-action="Delete" asp-route-roomName="@room.Name">
+                <button style="width: 100px; margin-top: 10px;" class="btn btn-danger" type="submit">Delete</button>
             </form>
         </div>
     }
