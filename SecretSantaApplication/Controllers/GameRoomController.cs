@@ -29,7 +29,7 @@ namespace SecretSantaApplication.Controllers
         public ViewResult Index([Optional] string param)
         {
             var rooms = _appDbContext.Rooms;
-            ViewData["message"] = param;
+            ViewData["Message"] = param;
             return View(rooms);
         }
 
@@ -119,7 +119,22 @@ namespace SecretSantaApplication.Controllers
             if (room == null)
                 return new NotFoundResult();
 
-            var mailAddress = HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress);
+            if (room.IsStarted)
+            {
+                return RedirectToAction("Index", "Room",
+                    new {param = "You have missed, game in this room has already started!"});
+            }
+
+            var userInRoom = _appDbContext.UserToRooms.SingleOrDefault(u =>
+                u.EmailAddress == HttpContext.Session.GetString(ConstantFields.EmailAddress));
+
+            if (userInRoom != null)
+            {
+                return RedirectToAction("Index", "Room",
+                    new {param = "You have already joined in some room, you can join in only one room!"});
+            }
+
+            var mailAddress = HttpContext.Session.GetString(ConstantFields.EmailAddress);
             User user = _appDbContext.Users.First(u =>
                 u.EmailAddress == mailAddress);
 
