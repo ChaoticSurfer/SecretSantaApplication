@@ -3,6 +3,7 @@
 
 }
 
+@using SecretSantaApplication.Helpers
 @model Microsoft.EntityFrameworkCore.DbSet<Room>;
 
 @section css{
@@ -11,25 +12,37 @@
 
 <div class="text-center align-content-center justify-content-center">
     <h5 style="text-decoration: underline" class="text-danger">@ViewData["Message"]</h5>
-    @foreach (Room Room in Model)
+    @foreach (Room room in Model)
     {
         <div class="block container-md">
-            <span class="float-left name"> @Room.Name</span>
+            <span class="float-left name"> @room.Name</span>
             <br>
             <p class="container block">
-                @Room.Description
+                @room.Description
             </p>
             <span class="float-right align-bottom container block">
-                @Room.Creator
+                @room.Creator
             </span>
-            <img src="~/images/RoomLogoImages/@Room.LogoName" alt="@Room.LogoName" asp-append-version="true" width="250px" height="250px">
+            <img src="~/images/RoomLogoImages/@room.LogoName" alt="@room.LogoName" asp-append-version="true" width="250px" height="250px">
+            @if (room.IsStarted)
+            {
+                <p style="color: green; font-weight: bold">
+                    Status : @ConstantFields.STARTED
+                </p>
+            }
+            else
+            {
+                <p style="color: red; font-weight: bold">
+                    Status : @ConstantFields.NOT_STARTED
+                </p>
+            }
 
-            <form asp-controller="Room" method="post" asp-route-returnurl="Room/list" asp-action="Delete" asp-route-roomName="@Room.Name">
+            <form asp-controller="Room" method="post" asp-route-returnurl="Room/list" asp-action="Delete" asp-route-roomName="@room.Name">
                 <button type="submit">Delete</button>
             </form>
 
-            <form asp-controller="Room" asp-route-returnurl="Room" method="post" asp-action="Join" asp-route-roomName="@Room.Name">
-                <input type="hidden" value="@Room.Name" name="RoomName">
+            <form asp-controller="Room" asp-route-returnurl="Room" method="post" asp-action="Join" asp-route-roomName="@room.Name">
+                <input type="hidden" value="@room.Name" name="RoomName">
                 <button type="submit">Join</button>
             </form>
         </div>
