@@ -33,7 +33,6 @@ namespace SecretSantaApplication.Controllers
             return View(rooms);
         }
 
-
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> Create()
@@ -73,7 +72,6 @@ namespace SecretSantaApplication.Controllers
             return View();
         }
 
-
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> Delete(string roomName)
@@ -83,11 +81,15 @@ namespace SecretSantaApplication.Controllers
             {
                 return NotFound();
             }
-
-            string creatorMail = HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress);
+            var creatorMail = HttpContext.Session.GetString(ConstantFields.EmailAddress);
             if (room.Creator != creatorMail)
             {
                 return RedirectToAction("Index", "Room", new {param = "Your are not creator of this room!"});
+            }
+
+            if (room.IsStarted)
+            {
+                return RedirectToAction("Index", "Room", new {param = "The game has already started in this game room!"});
             }
 
             string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -99,6 +101,13 @@ namespace SecretSantaApplication.Controllers
 
             _appDbContext.Rooms.Remove(room);
             await _appDbContext.SaveChangesAsync();
+
+            var users = _appDbContext.UserToRooms.Where(r => r.Name == roomName).ToList();
+            foreach (var user in users)
+            {
+                Console.WriteLine(user.Name);
+            }
+            
             return RedirectToActionPermanent(nameof(Index), "Room");
         }
 
