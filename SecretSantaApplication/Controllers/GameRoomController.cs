@@ -102,7 +102,8 @@ namespace SecretSantaApplication.Controllers
 
             if (room.IsStarted)
             {
-                return RedirectToAction("Index", "Room", new {param = "The game has already started in this game room!"});
+                return RedirectToAction("Index", "Room",
+                    new {param = "The game has already started in this game room!"});
             }
 
             string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -121,9 +122,18 @@ namespace SecretSantaApplication.Controllers
         [HttpPost]
         public async Task<ActionResult> Join(string roomName)
         {
-            Room room = _appDbContext.Rooms.FirstOrDefault(r => r.Name == roomName);
+            var room = _appDbContext.Rooms.FirstOrDefault(r => r.Name == roomName);
             if (room == null)
                 return new NotFoundResult();
+
+            var profile = _appDbContext.Profiles.FirstOrDefault(p =>
+                p.EmailAddress == HttpContext.Session.GetString(ConstantFields.EmailAddress));
+
+            if (profile == null)
+            {
+                return RedirectToAction("Index", "Room",
+                    new {param = "You have to finish filling profile to join in game room!"});
+            }
 
             if (room.IsStarted)
             {
