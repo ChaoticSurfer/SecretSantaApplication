@@ -3,22 +3,22 @@
     Layout = "_layout";
 }
 
-<div id="profile">
+<div id="profile" style="text-align: center; border: 1px solid black; border-radius: 30px; padding: 15px">
     <h5 style="text-decoration: underline" class="text-danger">@ViewData["Message"]</h5>
     <form asp-action="Profile" method="post">
         <div>
-            <p lass="form-control">Email Address : @ViewData["Email"]</p>
+            <p style="font-weight: bold; font-size: 17px" lass="form-control">Email Address : @ViewData["Email"]</p>
         </div>
         <div>
-            <label for="birthDate">Birth Date</label>
-            <input id="birthDate" type="date" class="form-control" name="birthDate" placeholder="birthDate" value="@ViewData["birthDate"]" required="required">
+            <label style="margin-top: 20px; font-weight: bold; font-size: 17px" for="birthDate">Birth Date</label>
+            <input style="width: 250px; margin: auto" id="birthDate" type="date" class="form-control" name="birthDate" placeholder="birthDate" value="@ViewData["birthDate"]" required="required">
         </div>
         <div>
-            <label for="letterToSecretSanta">Letter to Secret Santa</label>
-            <textarea id="letterToSecretSanta" type="text" class="form-control" name="letterToSecretSanta" placeholder="Type letter to secret santa" rows="5" cols="50" required="required">@ViewData["letterToSecretSanta"]</textarea>
+            <label style="margin-top: 20px; font-weight: bold; font-size: 17px" for="letterToSecretSanta">Letter to Secret Santa</label>
+            <textarea style="width: 400px; height: 400px; margin: auto" id="letterToSecretSanta" type="text" class="form-control" name="letterToSecretSanta" placeholder="Type letter to secret santa" rows="5" cols="50" required="required">@ViewData["letterToSecretSanta"]</textarea>
         </div>
         <div>
-            <button class="btn btn-success" class="form-control" type="submit">Save</button>
+            <button style="width: 250px; margin-top: 20px" class="btn btn-success" type="submit">Save</button>
         </div>
     </form>
 </div>
