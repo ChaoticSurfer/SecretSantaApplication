@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,5 +16,7 @@ namespace SecretSantaApplication.Models
         [DisplayName("Upload Room Logo")]
         [NotMapped]
         public IFormFile ImageLogoFile { get; set; }
+
+        public ICollection<UserToRoom> UserToRooms { get; set; } = new List<UserToRoom>();
     }
 }

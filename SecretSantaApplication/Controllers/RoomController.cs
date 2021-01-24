@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SecretSantaApplication.Data;
 using SecretSantaApplication.Models;
 
@@ -23,14 +23,16 @@ namespace SecretSantaApplication.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public ViewResult List()
+        public ViewResult Index([Optional] string param)
         {
             var rooms = _appDbContext.Rooms;
+            ViewData["message"] = param;
             return View(rooms);
         }
 
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult> Create()
         {
             var profileIsCompleted = _appDbContext.Profiles.SingleOrDefault(p =>
@@ -42,6 +44,7 @@ namespace SecretSantaApplication.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Create(Room room)
         {
             if (ModelState.IsValid)
@@ -70,9 +73,9 @@ namespace SecretSantaApplication.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(string roomName)
         {
-            Room room = _appDbContext.Rooms.FirstOrDefault(r => r.Name == id);
+            Room room = _appDbContext.Rooms.FirstOrDefault(r => r.Name == roomName);
             if (room == null)
             {
                 return NotFound();
@@ -81,7 +84,7 @@ namespace SecretSantaApplication.Controllers
             string creatorMail = HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress);
             if (room.Creator != creatorMail)
             {
-                return Unauthorized();
+                return RedirectToAction("Index", "Room", new {param = "Your are not creator of this room!"});
             }
 
             string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -93,7 +96,28 @@ namespace SecretSantaApplication.Controllers
 
             _appDbContext.Rooms.Remove(room);
             await _appDbContext.SaveChangesAsync();
-            return RedirectToActionPermanent(nameof(List), "Room");
+            return RedirectToActionPermanent(nameof(Index), "Room");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> Join(string roomName)
+        {
+            Room room = _appDbContext.Rooms.FirstOrDefault(r => r.Name == roomName);
+            if (room == null)
+                return new NotFoundResult();
+
+            var mailAddress = HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress);
+            User user = _appDbContext.Users.First(u =>
+                u.EmailAddress == mailAddress);
+
+            UserToRoom userToRoom = new UserToRoom();
+            userToRoom.Name = room.Name;
+            userToRoom.EmailAddress = mailAddress;
+            userToRoom.JoinDate = DateTime.Now;
+            _appDbContext.Add(userToRoom);
+            _appDbContext.SaveChanges();
+            return RedirectPermanent("/");
         }
     }
 }

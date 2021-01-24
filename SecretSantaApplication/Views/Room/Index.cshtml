@@ -9,12 +9,8 @@
     <link rel="stylesheet" href="css/ListRoom.css">
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-</div>
-
 <div class="text-center align-content-center justify-content-center">
-
+    <h5 style="text-decoration: underline" class="text-danger">@ViewData["Message"]</h5>
     @foreach (Room Room in Model)
     {
         <div class="block container-md">
@@ -28,15 +24,14 @@
             </span>
             <img src="~/images/RoomLogoImages/@Room.LogoName" alt="@Room.LogoName" asp-append-version="true" width="250px" height="250px">
 
-
-            @* <a asp-controller="Room" method="post" asp-action="Delete" asp-route-id="@Room.Name" asp-area=""> Delete room</a> *@
-            
-            
-            <form asp-controller="Room" method="post" asp-action="Delete" asp-route-id="@Room.Name">
+            <form asp-controller="Room" method="post" asp-route-returnurl="Room/list" asp-action="Delete" asp-route-roomName="@Room.Name">
                 <button type="submit">Delete</button>
+            </form>
+
+            <form asp-controller="Room" asp-route-returnurl="Room" method="post" asp-action="Join" asp-route-roomName="@Room.Name">
+                <input type="hidden" value="@Room.Name" name="RoomName">
+                <button type="submit">Join</button>
             </form>
         </div>
     }
 </div>
-
-@* asp-area="" asp-controller="Home" asp-action="Index" *@
