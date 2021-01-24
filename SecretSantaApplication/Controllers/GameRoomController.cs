@@ -33,44 +33,56 @@ namespace SecretSantaApplication.Controllers
             return View(rooms);
         }
 
+
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult> Create()
+        public async Task<ActionResult> Create([Optional] string param)
         {
             var profileIsCompleted = _appDbContext.Profiles.SingleOrDefault(p =>
                 p.EmailAddress == HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress));
             if (profileIsCompleted == null)
                 return RedirectToAction("Profile", "User",
                     new {param = "You have to fill your profile, if you want to create game rooms!"});
+            ViewData["Message"] = param;
             return View();
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create(Room room)
+        public async Task<ActionResult> Create(Room gameRoom)
         {
+            var room = _appDbContext.Rooms.SingleOrDefault(r =>
+                r.Creator == HttpContext.Session.GetString(ConstantFields.EmailAddress));
+
+            if (room != null)
+            {
+                return RedirectToAction("Create", "Room",
+                    new {param = "You have already created room,you only can create one room!"});
+            }
+
             if (ModelState.IsValid)
             {
                 // save image to wwwwroot/images
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
-                string fileName = Path.GetFileNameWithoutExtension(room.ImageLogoFile.FileName);
-                string extension = Path.GetExtension(room.ImageLogoFile.FileName);
-                room.LogoName = fileName = fileName + DateTime.Now.ToString("yyyy-MM-dd__ss-ffffff") + extension;
+                string fileName = Path.GetFileNameWithoutExtension(gameRoom.ImageLogoFile.FileName);
+                string extension = Path.GetExtension(gameRoom.ImageLogoFile.FileName);
+                gameRoom.LogoName = fileName = fileName + DateTime.Now.ToString("yyyy-MM-dd__ss-ffffff") + extension;
                 string path = Path.Combine(wwwRootPath + "/images/RoomLogoImages/" + fileName);
 
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
-                    await room.ImageLogoFile.CopyToAsync(fileStream);
+                    await gameRoom.ImageLogoFile.CopyToAsync(fileStream);
                 }
 
-                room.Creator = HttpContext.Session.GetString(Helpers.ConstantFields.EmailAddress);
-                _appDbContext.Add(room);
+                gameRoom.Creator = HttpContext.Session.GetString(ConstantFields.EmailAddress);
+                _appDbContext.Add(gameRoom);
                 await _appDbContext.SaveChangesAsync();
                 return Redirect("/");
             }
 
             return View();
         }
+
 
         [Authorize]
         [HttpPost]
@@ -81,7 +93,8 @@ namespace SecretSantaApplication.Controllers
             {
                 return NotFound();
             }
-            var creatorMail = HttpContext.Session.GetString(ConstantFields.EmailAddress);
+
+            string creatorMail = HttpContext.Session.GetString(ConstantFields.EmailAddress);
             if (room.Creator != creatorMail)
             {
                 return RedirectToAction("Index", "Room", new {param = "Your are not creator of this room!"});
@@ -101,13 +114,6 @@ namespace SecretSantaApplication.Controllers
 
             _appDbContext.Rooms.Remove(room);
             await _appDbContext.SaveChangesAsync();
-
-            var users = _appDbContext.UserToRooms.Where(r => r.Name == roomName).ToList();
-            foreach (var user in users)
-            {
-                Console.WriteLine(user.Name);
-            }
-            
             return RedirectToActionPermanent(nameof(Index), "Room");
         }
 
