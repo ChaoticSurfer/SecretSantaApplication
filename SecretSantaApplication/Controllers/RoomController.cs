@@ -159,7 +159,8 @@ namespace SecretSantaApplication.Controllers
             userToRoom.EmailAddress = mailAddress;
             userToRoom.JoinDate = DateTime.Now;
             _appDbContext.Add(userToRoom);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
+
             return RedirectPermanent("/");
         }
 
@@ -187,21 +188,34 @@ namespace SecretSantaApplication.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // private static IEnumerable<(T, T)> GetSantaTargets<T>(List<T> players)
+        // {
+        //     var targets = new List<(T, T)>();
+        //     var shuffledPlayers = players.Shuffle().ToList();
+        //     for (int i = 0; i < shuffledPlayers.Count; i++)
+        //     {
+        //         if (i == shuffledPlayers.Count - 1)
+        //         {
+        //             targets.Add((shuffledPlayers[i], shuffledPlayers[0]));
+        //             break;
+        //         }
+        //
+        //         targets.Add((shuffledPlayers[i], shuffledPlayers[i + 1]));
+        //     }
+        //
+        //     return targets;
+        // }
+
+
         private static IEnumerable<(T, T)> GetSantaTargets<T>(List<T> players)
         {
             var targets = new List<(T, T)>();
             var shuffledPlayers = players.Shuffle().ToList();
-            for (int i = 0; i < shuffledPlayers.Count; i++)
+            for (int i = 0; i < shuffledPlayers.Count - 1; i++)
             {
-                if (i == shuffledPlayers.Count - 1)
-                {
-                    targets.Add((shuffledPlayers[i], shuffledPlayers[0]));
-                    break;
-                }
-
-                targets.Add((shuffledPlayers[i], shuffledPlayers[i + 1]));
+                targets.Add((shuffledPlayers[i], shuffledPlayers[i + 1]));  // each points to next
             }
-
+            targets.Add((shuffledPlayers[shuffledPlayers.Count - 1], shuffledPlayers[0]));      // last -->> first
             return targets;
         }
     }
