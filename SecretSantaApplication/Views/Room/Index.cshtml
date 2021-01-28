@@ -1,18 +1,19 @@
+@model SecretSantaApplication.Views.ViewModels.RoomsUserToRoomsViewModel
+
 @using SecretSantaApplication.Helpers
 @{
     ViewData["Title"] = "Rooms List";
 
 }
-
 <div class="text-center align-content-center justify-content-center">
     <h5 style="text-decoration: underline" class="text-danger">@ViewData["Message"]</h5>
-    @foreach (Room room in Model)
+    @foreach (Room room in Model.Rooms)
     {
         <div style="width: 500px;  border: 1px solid black; border-radius: 10px; padding: 50px; margin: 20px auto auto;">
             <h5 style="text-align: center; font-weight: bold; color: purple">Name: @room.Name</h5>
             <h6 style="color: orange"> Description: @room.Description</h6>
             <h6 style="color: orangered">Owner : @room.Creator</h6>
-            <img style="border-radius: 100px; margin-top: 20px" src="~/images/RoomLogoImages/@room.LogoName" alt="@room.LogoName"  width="200px" height="200px">
+            <img style="border-radius: 100px; margin-top: 20px" src="~/images/RoomLogoImages/@room.LogoName" alt="@room.LogoName" width="200px" height="200px">
             <br>
             @if (room.IsStarted)
             {
@@ -35,6 +36,22 @@
             <form asp-controller="Room" method="post" asp-route-returnurl="Room/list" asp-action="Delete" asp-route-roomName="@room.Name">
                 <button style="width: 100px; margin-top: 10px;" class="btn btn-danger" type="submit">Delete</button>
             </form>
+
+
+            @{
+                var userEmails = Model.UserToRooms.Where(toRoom => toRoom.Name == room.Name);
+            }
+            
+            
+            <div style="border: #0b2e13 dot-dot-dash" align="center" align="justify">
+                <br>
+                <h6>Participants</h6>
+                @foreach (UserToRoom userToRoom in userEmails)
+                {
+                    @userToRoom.EmailAddress <pre>  </pre>
+                }
+
+            </div>
         </div>
     }
 </div>

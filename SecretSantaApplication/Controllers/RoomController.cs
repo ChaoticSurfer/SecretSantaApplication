@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,11 +9,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SecretSantaApplication.Data;
 using SecretSantaApplication.Extensions;
 using SecretSantaApplication.Helpers;
 using SecretSantaApplication.Models;
+using SecretSantaApplication.Views.ViewModels;
 
 namespace SecretSantaApplication.Controllers
 {
@@ -26,11 +31,19 @@ namespace SecretSantaApplication.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public ViewResult Index([Optional] string param)
+        public ViewResult Index([Optional] string param) // list
         {
             var rooms = _appDbContext.Rooms;
+
             ViewData["Message"] = param;
-            return View(rooms);
+
+            // var users = _appDbContext.Users;
+            var userToRooms = _appDbContext.UserToRooms;
+
+            // var lookup = userToRooms.ToLookup(userToRoom => userToRoom.Name);
+
+            RoomsUserToRoomsViewModel roomsUserToRoomsViewModel = new RoomsUserToRoomsViewModel(rooms, userToRooms);
+            return View(roomsUserToRoomsViewModel);
         }
 
 
@@ -156,8 +169,15 @@ namespace SecretSantaApplication.Controllers
 
             UserToRoom userToRoom = new UserToRoom();
             userToRoom.Name = room.Name;
+            userToRoom.User = user;
+
             userToRoom.EmailAddress = mailAddress;
+            userToRoom.Room = room;
             userToRoom.JoinDate = DateTime.Now;
+
+            user.UserToRooms.Add(userToRoom);
+            room.UserToRooms.Add(userToRoom);
+
             _appDbContext.Add(userToRoom);
             await _appDbContext.SaveChangesAsync();
 
@@ -213,9 +233,10 @@ namespace SecretSantaApplication.Controllers
             var shuffledPlayers = players.Shuffle().ToList();
             for (int i = 0; i < shuffledPlayers.Count - 1; i++)
             {
-                targets.Add((shuffledPlayers[i], shuffledPlayers[i + 1]));  // each points to next
+                targets.Add((shuffledPlayers[i], shuffledPlayers[i + 1])); // each points to next
             }
-            targets.Add((shuffledPlayers[shuffledPlayers.Count - 1], shuffledPlayers[0]));      // last -->> first
+
+            targets.Add((shuffledPlayers[shuffledPlayers.Count - 1], shuffledPlayers[0])); // last -->> first
             return targets;
         }
     }
